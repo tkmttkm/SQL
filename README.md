@@ -1,5 +1,5 @@
 # SQL
 JDBCTemplate<br>
 NamedJDBCTemplate<br>
-DataJDBCTemplate<br>
-DataJPA
+Spring Data JDBC<br>
+Spring Data JPA
