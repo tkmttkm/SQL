@@ -3,7 +3,7 @@ package com.example.demo.Entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * JPAのテストエンティティ
@@ -11,7 +11,7 @@ import lombok.Data;
  *
  */
 @Entity
-@Data
+@Getter
 @Table(name = "テストメンバー")
 public class JPAEntity {
 	
