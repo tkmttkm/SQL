@@ -25,7 +25,7 @@ public class NamedJDBCRepository {
 	private NamedParameterJdbcTemplate namedJdbc;
 
 	/**
-	 * @return {@link JDBCEntity#テストメンバー テストメンバー}テーブルのデータを全て取得
+	 * @return {@link JDBCEntity#TEST TEST}テーブルのデータを全て取得
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> findAll() throws DataAccessException {
@@ -35,7 +35,7 @@ public class NamedJDBCRepository {
 			sqlList.add("SELECT");
 			sqlList.add("*");
 			sqlList.add("FROM");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 
 			String sql = String.join(" ", sqlList);
 
@@ -61,7 +61,7 @@ public class NamedJDBCRepository {
 			sqlList.add("SELECT");
 			sqlList.add("*");
 			sqlList.add("FROM");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("WHERE");
 			sqlList.add(JDBCEntity.ID + " = " + ID);
 
@@ -92,7 +92,7 @@ public class NamedJDBCRepository {
 			params.addValue(getUniqueKey(updateDataMap, ID.replace(":", "")), id);
 
 			sqlList.add("UPDATE");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("SET");
 			sqlList.add(updateSet(updateDataMap, params));
 			sqlList.add("WHERE");
@@ -120,7 +120,7 @@ public class NamedJDBCRepository {
 			params.addValue(ID.replace(":", ""), id);
 
 			sqlList.add("DELETE");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("WHERE");
 			sqlList.add(JDBCEntity.ID + " = " + ID);
 
@@ -140,7 +140,7 @@ public class NamedJDBCRepository {
 		List<String> sqlList = new ArrayList<String>();
 
 		sqlList.add("UPDATE");
-		sqlList.add(JDBCEntity.テストメンバー);
+		sqlList.add(JDBCEntity.TEST);
 		sqlList.add("SET");
 		sqlList.add(batchUpdateSet());
 		sqlList.add("WHERE");
@@ -167,7 +167,7 @@ public class NamedJDBCRepository {
 		List<String> sqlList = new ArrayList<String>();
 
 		sqlList.add("DELETE");
-		sqlList.add(JDBCEntity.テストメンバー);
+		sqlList.add(JDBCEntity.TEST);
 		sqlList.add("WHERE");
 		sqlList.add(JDBCEntity.ID + " = " + ID);
 		

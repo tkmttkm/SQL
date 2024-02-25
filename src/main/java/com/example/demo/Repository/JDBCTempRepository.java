@@ -24,7 +24,7 @@ public class JDBCTempRepository {
 	private JdbcTemplate jdbcTemp;
 
 	/**
-	 * @return {@link JDBCEntity#テストメンバー テストメンバー}テーブルのデータを全て取得
+	 * @return {@link JDBCEntity#TEST TEST}テーブルのデータを全て取得
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> findAll() throws DataAccessException {
@@ -34,7 +34,7 @@ public class JDBCTempRepository {
 			sqlList.add("SELECT");
 			sqlList.add("*");
 			sqlList.add("FROM");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 
 			String sql = String.join(" ", sqlList);
 
@@ -58,7 +58,7 @@ public class JDBCTempRepository {
 			sqlList.add("SELECT");
 			sqlList.add("*");
 			sqlList.add("FROM");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("WHERE");
 			sqlList.add(JDBCEntity.ID + " = ?");
 
@@ -89,7 +89,7 @@ public class JDBCTempRepository {
 	
 			List<String> sqlList = new ArrayList<String>();
 			sqlList.add("UPDATE");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("SET");
 			sqlList.add(updateSet(updateDataMap));
 			sqlList.add("WHERE");
@@ -114,7 +114,7 @@ public class JDBCTempRepository {
 			List<String> sqlList = new ArrayList<String>();
 
 			sqlList.add("DELETE");
-			sqlList.add(JDBCEntity.テストメンバー);
+			sqlList.add(JDBCEntity.TEST);
 			sqlList.add("WHERE");
 			sqlList.add(JDBCEntity.ID + " = ?");
 
@@ -142,7 +142,7 @@ public class JDBCTempRepository {
 		List<String> sqlList = new ArrayList<String>();
 
 		sqlList.add("UPDATE");
-		sqlList.add(JDBCEntity.テストメンバー);
+		sqlList.add(JDBCEntity.TEST);
 		sqlList.add("SET");
 		sqlList.add(batchUpdateSet());
 		sqlList.add("WHERE");
@@ -176,7 +176,7 @@ public class JDBCTempRepository {
 
 		List<String> sqlList = new ArrayList<String>();
 		sqlList.add("DELETE");
-		sqlList.add(JDBCEntity.テストメンバー);
+		sqlList.add(JDBCEntity.TEST);
 		sqlList.add("WHERE");
 		sqlList.add(JDBCEntity.ID + " = ?");
 		String sql = String.join(" ", sqlList);
@@ -303,13 +303,13 @@ public class JDBCTempRepository {
 					ps.setInt(column_sortNoMap.get(JDBCEntity.ID), data.getId());
 				}
 				if (columnName.equals(JDBCEntity.BIRTHDAY)) {
-					ps.setInt(column_sortNoMap.get(JDBCEntity.BIRTHDAY), data.get誕生日());
+					ps.setInt(column_sortNoMap.get(JDBCEntity.BIRTHDAY), data.getBirth_day());
 				}
 				if (columnName.equals(JDBCEntity.FIRST_NAME)) {
-					ps.setString(column_sortNoMap.get(JDBCEntity.FIRST_NAME), data.get名());
+					ps.setString(column_sortNoMap.get(JDBCEntity.FIRST_NAME), data.getLast_name());
 				}
 				if (columnName.equals(JDBCEntity.LAST_NAME)) {
-					ps.setString(column_sortNoMap.get(JDBCEntity.LAST_NAME), data.get姓());
+					ps.setString(column_sortNoMap.get(JDBCEntity.LAST_NAME), data.getFirst_name());
 				}
 			}
 		} catch (NumberFormatException e) {

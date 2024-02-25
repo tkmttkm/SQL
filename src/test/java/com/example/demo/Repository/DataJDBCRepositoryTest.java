@@ -39,9 +39,9 @@ class DataJDBCRepositoryTest {
 		Optional<DataJDBCEntity> dataOpt = repository.findById(1);
 		DataJDBCEntity data = dataOpt.isPresent() ? dataOpt.get() : null;
 		
-		assertEquals(data.get姓().strip(), "テスト");
-		assertEquals(data.get名().strip(), "太郎");
-		assertEquals(data.get誕生日(), 20240101);
+		assertEquals(data.getFirstName().strip(), "テスト");
+		assertEquals(data.getLastName().strip(), "太郎");
+		assertEquals(data.getBirthDay(), 20240101);
 	}
 	
 	@Test
@@ -58,9 +58,9 @@ class DataJDBCRepositoryTest {
 		Optional<DataJDBCEntity> beforeDataOpt = repository.findById(1);
 		DataJDBCEntity beforeData = beforeDataOpt.isPresent() ? beforeDataOpt.get() : null;
 		
-		assertEquals(beforeData.get姓().strip(), "テスト");
-		assertEquals(beforeData.get名().strip(), "太郎");
-		assertEquals(beforeData.get誕生日(), 20240101);
+		assertEquals(beforeData.getFirstName().strip(), "テスト");
+		assertEquals(beforeData.getLastName().strip(), "太郎");
+		assertEquals(beforeData.getBirthDay(), 20240101);
 		
 		DataJDBCEntity data = new DataJDBCEntity(1, "テストテスト", "save太郎くん", 20240214);
 		repository.save(data);
@@ -68,9 +68,9 @@ class DataJDBCRepositoryTest {
 		Optional<DataJDBCEntity> updatedOpt = repository.findById(1);
 		DataJDBCEntity updatedData = updatedOpt.isPresent() ? updatedOpt.get() : null;
 		
-		assertEquals(updatedData.get姓().strip(), "テストテスト");
-		assertEquals(updatedData.get名().strip(), "save太郎くん");
-		assertEquals(updatedData.get誕生日(), 20240214);
+		assertEquals(updatedData.getFirstName().strip(), "テストテスト");
+		assertEquals(updatedData.getLastName().strip(), "save太郎くん");
+		assertEquals(updatedData.getBirthDay(), 20240214);
 	}
 
 }

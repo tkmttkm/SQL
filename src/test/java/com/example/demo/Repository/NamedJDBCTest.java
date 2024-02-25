@@ -32,7 +32,7 @@ class NamedJDBCTest {
 	void testFindById() {
 		Map<String, Object> data = repository.findById(1);
 
-		assertEquals(data.get(JDBCEntity.BIRTHDAY), "20240101");
+		assertEquals(data.get(JDBCEntity.BIRTHDAY), 20240101);
 	}
 
 	@Test

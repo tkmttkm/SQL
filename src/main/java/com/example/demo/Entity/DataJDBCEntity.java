@@ -1,34 +1,30 @@
 package com.example.demo.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * DataJDBCテスト用
  * @author Takumi
  *
  */
-@Entity
 @Getter
-@Table(name = "テストメンバー")
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table("TEST")
 public class DataJDBCEntity {
 	@Id
 	private Integer id;
-	public DataJDBCEntity(Integer id, String 姓, String 名, Integer 誕生日) {
-		this.id = id;
-		this.姓 = 姓;
-		this.名 = 名;
-		this.誕生日 = 誕生日;
-	}
-	
-	/**
-	 * デフォルトコンストラクタ
-	 */
-	DataJDBCEntity() {}
-	
-	private String 姓;
-	private String 名;
-	private Integer 誕生日;
+
+	private String firstName;
+
+	private String lastName;
+
+	private Integer birthDay;
 }

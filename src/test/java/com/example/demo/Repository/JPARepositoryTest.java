@@ -32,7 +32,7 @@ class JPARepositoryTest {
 		List<JPAEntity> data = repository.findAll();
 		
 		assertEquals(data.size(), 4);
-		assertEquals(data.get(0).get名().strip(), "太郎");
+		assertEquals(data.get(0).getLast_name().strip(), "太郎");
 	}
 
 	@Test
@@ -40,8 +40,8 @@ class JPARepositoryTest {
 		Optional<JPAEntity> dataOpt = repository.findById(1);
 		JPAEntity data = dataOpt.orElse(null);
 		
-		assertEquals(data.get誕生日(), 20240101);
-		assertEquals(data.get名().strip(), "太郎");
+		assertEquals(data.getBirth_day(), 20240101);
+		assertEquals(data.getLast_name().strip(), "太郎");
 	}
 	
 	@Test
@@ -55,9 +55,9 @@ class JPARepositoryTest {
 		Optional<JPAEntity> insertDataOpt = repository.findById(9);
 		JPAEntity insertData = insertDataOpt.orElse(null);
 		
-		assertEquals(insertData.get姓().strip(), "テストくん");
-		assertEquals(insertData.get名().strip(), "テストちゃん");
-		assertEquals(insertData.get誕生日(), 20200202);
+		assertEquals(insertData.getFirst_name().strip(), "テストくん");
+		assertEquals(insertData.getLast_name().strip(), "テストちゃん");
+		assertEquals(insertData.getBirth_day(), 20200202);
 	}
 	
 	@Test
