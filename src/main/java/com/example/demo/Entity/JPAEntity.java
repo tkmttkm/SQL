@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "test2")
+@Table(name = "test_table")
 public class JPAEntity {
 	
 	@Id
