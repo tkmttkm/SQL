@@ -20,7 +20,7 @@ public class JDBCEntity {
 	private String last_name;
 	private int birth_day;
 
-	public static final String TEST = "test2";
+	public static final String TEST = "test_table";
 	public static final String ID = "id";
 	public static final String FIRST_NAME = "first_name";
 	public static final String LAST_NAME = "last_name";

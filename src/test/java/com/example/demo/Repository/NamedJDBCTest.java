@@ -69,14 +69,14 @@ class NamedJDBCTest {
 	void batchUpdateTest() {
 		List<JDBCEntity> entityList = new ArrayList<>();
 		entityList.add(new JDBCEntity(1, "Junit", "たのすいーーーー", 20240202));
-		entityList.add(new JDBCEntity(2, "Junit", "たのすいーーーー!!!!!!!!", 20240203));
+		entityList.add(new JDBCEntity(2, "Junit", "楽しいねえ", 20240203));
 		
 		int updateCount = repository.batchUpdate(entityList);
 		assertEquals(updateCount, 2);
 		var afterId1 = repository.findById(1);
 		var afterId2 = repository.findById(2);
 		assertTrue("たのすいーーーー".equals(afterId1.get(JDBCEntity.LAST_NAME.toString())));
-		assertTrue("たのすいーーーー!!!!!!!!".equals(afterId2.get(JDBCEntity.LAST_NAME.toString())));
+		assertTrue("楽しいねえ".equals(afterId2.get(JDBCEntity.LAST_NAME.toString())));
 	}
 	
 	@Test
