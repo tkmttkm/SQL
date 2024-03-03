@@ -1,4 +1,4 @@
-package com.example.demo.Repository;
+package com.example.demo.Dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +16,13 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.Entity.JDBCEntity;
 
+/**
+ * @author Takumi
+ * NamedJdbcTemplate
+ *
+ */
 @Repository
-public class NamedJDBCRepository {
+public class NamedJDBCDao {
 
 	private final String ID = ":id";
 

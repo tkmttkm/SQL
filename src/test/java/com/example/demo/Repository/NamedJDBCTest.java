@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.Dao.NamedJDBCDao;
 import com.example.demo.Entity.JDBCEntity;
 
 @SpringBootTest
@@ -19,7 +20,7 @@ import com.example.demo.Entity.JDBCEntity;
 class NamedJDBCTest {
 
 	@Autowired
-	private NamedJDBCRepository repository;
+	private NamedJDBCDao repository;
 
 	@Test
 	void testFindAll() {
