@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import com.example.demo.Dao.RowMapper.JDBCEntityRowMapper;
 import com.example.demo.Entity.JDBCEntity;
@@ -91,7 +92,7 @@ public class JDBCTempDao {
 	public int updateById(int id, Map<String, String> updateDataMap) throws DataAccessException {
 		try {
 
-			Map<String, String> otherMap = new TreeMap<String, String>();
+			Map<String, String> otherMap = new LinkedHashMap<String, String>();
 			Integer idInte = Integer.valueOf(id);
 			otherMap.put(JDBCEntity.ID, idInte.toString());
 			PreparedStatementSetter pss = GetPreparedStatementSetter(updateDataMap, otherMap);
@@ -103,6 +104,29 @@ public class JDBCTempDao {
 			sqlList.add(updateSet(updateDataMap));
 			sqlList.add("WHERE");
 			sqlList.add(JDBCEntity.ID + " = ?");
+			String sql = String.join(" ", sqlList);
+
+			return jdbcTemp.update(sql, pss);
+		} catch (DataAccessException e) {
+			System.err.println(e.getMessage() + "\r\n"
+					+ e.getStackTrace());
+			throw e;
+		}
+	}
+	
+	/**
+	 * @param insertDataMap
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int insert(Map<String, String> insertDataMap) throws DataAccessException {
+		try {
+			PreparedStatementSetter pss = GetPreparedStatementSetter(insertDataMap, null);
+
+			List<String> sqlList = new ArrayList<String>();
+			sqlList.add("INSERT INTO");
+			sqlList.add(JDBCEntity.TEST);
+			sqlList.add(insertSet(insertDataMap));
 			String sql = String.join(" ", sqlList);
 
 			return jdbcTemp.update(sql, pss);
@@ -146,7 +170,7 @@ public class JDBCTempDao {
 		try {
 			List<Map<String, String>> otherMapList = new ArrayList<>();
 			for (JDBCEntity updateData : updateList) {
-				Map<String, String> otherMap = new TreeMap<>();
+				Map<String, String> otherMap = new LinkedHashMap<>();
 				var id = Integer.valueOf(updateData.getId());
 				otherMap.put(JDBCEntity.ID, id.toString());
 				otherMapList.add(otherMap);
@@ -177,6 +201,36 @@ public class JDBCTempDao {
 			throw e;
 		}
 	}
+	
+	/**
+	 * @param insertList
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public int batchInsert(List<JDBCEntity> insertList) throws DataAccessException {
+		try {
+			BatchPreparedStatementSetter batchPs = GetBatchPreparedStatementSetter(insertList, null);
+
+			List<String> sqlList = new ArrayList<String>();
+
+			sqlList.add("INSERT INTO");
+			sqlList.add(JDBCEntity.TEST);
+			sqlList.add(batchInsertSet());
+
+			String sql = String.join(" ", sqlList);
+
+			int[] batchUpdate = jdbcTemp.batchUpdate(sql, batchPs);
+			int returnCount = 0;
+			for (int count : batchUpdate) {
+				returnCount += count;
+			}
+
+			return returnCount;
+		} catch (DataAccessException e) {
+			System.err.println(e.getMessage() + "\r\n" + e.getStackTrace());
+			throw e;
+		}
+	}
 
 	/**
 	 * @param deleteList
@@ -186,10 +240,10 @@ public class JDBCTempDao {
 	public int batchDelete(List<JDBCEntity> deleteList) throws DataAccessException {
 		try {
 			List<Map<String, String>> whereMapList = new ArrayList<>();
-			Map<String, Integer> sortMap = new TreeMap<String, Integer>();
+			Map<String, Integer> sortMap = new LinkedHashMap<String, Integer>();
 			sortMap.put(JDBCEntity.ID, 1);
 			for (JDBCEntity updateData : deleteList) {
-				Map<String, String> otherMap = new TreeMap<>();
+				Map<String, String> otherMap = new LinkedHashMap<>();
 				var id = Integer.valueOf(updateData.getId());
 				otherMap.put(JDBCEntity.ID, id.toString());
 				whereMapList.add(otherMap);
@@ -272,6 +326,59 @@ public class JDBCTempDao {
 	}
 
 	/**
+	 * @param tableName
+	 * @param column_columnInfo カラム名とその型やNULL許容などのマップ
+	 * @param primaryKeyList プライマリキーのから無名を詰めたリスト
+	 * @throws DataAccessException
+	 */
+	public void executeCreate(String tableName, Map<String, String> column_columnInfo, List<String> primaryKeyList) throws DataAccessException {
+		try {
+			List<String> sqlList = new ArrayList<>();
+			
+			sqlList.add("CREATE TABLE");
+			sqlList.add(tableName);
+			sqlList.add("(");
+			
+			List<String> columnList = new ArrayList<String>();
+			for(var keyValue : column_columnInfo.entrySet()) {
+				columnList.add(keyValue.getKey() + " " + keyValue.getValue());
+			}
+			sqlList.add(String.join(", ", columnList));
+			
+			if(!CollectionUtils.isEmpty(primaryKeyList)) {
+				sqlList.add(", PRIMARY KEY (");
+				sqlList.add(String.join(", ", primaryKeyList));
+				sqlList.add(")");
+			}
+			
+			sqlList.add(")");
+			
+			jdbcTemp.execute(String.join(" ", sqlList));
+		} catch (DataAccessException e) {
+			System.err.println(e.getMessage() + "r\n" + e.getStackTrace());
+			throw e;
+		}
+	}
+	
+	/**
+	 * @param tableName
+	 * @throws DataAccessException
+	 */
+	public void executeDrop(String tableName) throws DataAccessException {
+		try {
+			List<String> sqlList = new ArrayList<>();
+			
+			sqlList.add("DROP TABLE");
+			sqlList.add(tableName);
+			
+			jdbcTemp.execute(String.join(" ", sqlList));
+		} catch (DataAccessException e) {
+			System.err.println(e.getMessage() + "r\n" + e.getStackTrace());
+			throw e;
+		}
+	}
+
+	/**
 	 * カラム名とその値のMapをイコールでつなぐ
 	 * @param map
 	 * @return
@@ -303,6 +410,31 @@ public class JDBCTempDao {
 	private String updateSet(Map<String, String> map) {
 		return joinComma(joinEqual(map));
 	}
+	
+	/**
+	 * @param column_valueMap
+	 * @return
+	 */
+	private String insertSet(Map<String, String> column_valueMap) {
+		String[] columnArray = new String[column_valueMap.size()];
+		String[] valueArray = new String[column_valueMap.size()];
+		
+		int index = 0;
+		for(var column_value : column_valueMap.entrySet()) {
+			columnArray[index] = column_value.getKey();
+			valueArray[index] = "?";
+			index++;
+		}
+		
+		List<String> insertSqlList = new ArrayList<>();
+		insertSqlList.add("(");
+		insertSqlList.add(String.join(", ", columnArray));
+		insertSqlList.add(") VALUES (");
+		insertSqlList.add(String.join(", ", valueArray));
+		insertSqlList.add(")");
+		
+		return String.join(" ", insertSqlList);
+	}
 
 	/**
 	 * updateのset句を作成する
@@ -312,26 +444,36 @@ public class JDBCTempDao {
 	private String batchUpdateSet() {
 		List<String> batchUpdateSetList = new ArrayList<>();
 
-		for (String columnName : GetSetQueryList_forBatchUpdate()) {
+		for (String columnName : JDBCEntity.GetSetQueryList_forBatchUpdate()) {
 			batchUpdateSetList.add(columnName + " = ?");
 		}
 
 		return String.join(", ", batchUpdateSetList);
 	}
-
+	
 	/**
 	 * @return
 	 */
-	private List<String> GetSetQueryList_forBatchUpdate() {
-		List<String> setQueryList = new ArrayList<String>();
+	private String batchInsertSet() {
+		List<String> batchInsertColumnSetList = new ArrayList<>();
+		List<String> batchInsertValueSetList = new ArrayList<>();
 
-		setQueryList.add(JDBCEntity.ID);
-		setQueryList.add(JDBCEntity.FIRST_NAME);
-		setQueryList.add(JDBCEntity.LAST_NAME);
-		setQueryList.add(JDBCEntity.BIRTHDAY);
+		for (String columnName : JDBCEntity.GetSetQueryList_forBatchUpdate()) {
+			batchInsertColumnSetList.add(columnName);
+			batchInsertValueSetList.add("?");
+		}
+		
+		List<String> sql = new ArrayList<>();
+		sql.add("(");
+		sql.add(String.join(", ", batchInsertColumnSetList));
+		sql.add(") VALUES (");
+		sql.add(String.join(", ", batchInsertValueSetList));
+		sql.add(")");
 
-		return setQueryList;
+		return String.join(" ", sql);
 	}
+
+
 
 	/**
 	 * @param ps
@@ -347,7 +489,7 @@ public class JDBCTempDao {
 				ps.setInt(column_sortNoMap.get(JDBCEntity.ID), Integer.parseInt(column_valueMap.get(JDBCEntity.ID)));
 			}
 			if (existKey(column_valueMap, JDBCEntity.BIRTHDAY)) {
-				ps.setString(column_sortNoMap.get(JDBCEntity.BIRTHDAY), column_valueMap.get(JDBCEntity.ID));
+				ps.setInt(column_sortNoMap.get(JDBCEntity.BIRTHDAY), Integer.parseInt(column_valueMap.get(JDBCEntity.BIRTHDAY)));
 			}
 			if (existKey(column_valueMap, JDBCEntity.FIRST_NAME)) {
 				ps.setString(column_sortNoMap.get(JDBCEntity.FIRST_NAME), column_valueMap.get(JDBCEntity.FIRST_NAME));
@@ -370,30 +512,30 @@ public class JDBCTempDao {
 	private void SetPreparedStatement_forBatchUpdate(PreparedStatement ps, JDBCEntity data,
 			Map<String, Integer> column_sortNoMap) {
 		try {
-			for (String columnName : GetSetQueryList_forBatchUpdate()) {
+			for (String columnName : JDBCEntity.GetSetQueryList_forBatchUpdate()) {
 				if (columnName.equals(JDBCEntity.ID)) {
-					if (data.getId() == 0) {
-						continue;
+					if (data.getId() != 0) {
+						ps.setInt(column_sortNoMap.get(JDBCEntity.ID), data.getId());
 					}
-					ps.setInt(column_sortNoMap.get(JDBCEntity.ID), data.getId());
+					continue;
 				}
 				if (columnName.equals(JDBCEntity.BIRTHDAY)) {
-					if (data.getBirth_day() == 0) {
-						continue;
+					if (data.getBirth_day() != 0) {
+						ps.setInt(column_sortNoMap.get(JDBCEntity.BIRTHDAY), data.getBirth_day());
 					}
-					ps.setInt(column_sortNoMap.get(JDBCEntity.BIRTHDAY), data.getBirth_day());
+					continue;
 				}
 				if (columnName.equals(JDBCEntity.FIRST_NAME)) {
-					if (StringUtils.isBlank(data.getFirst_name())) {
-						continue;
+					if (StringUtils.isNotBlank(data.getFirst_name())) {
+						ps.setString(column_sortNoMap.get(JDBCEntity.FIRST_NAME), data.getFirst_name());
 					}
-					ps.setString(column_sortNoMap.get(JDBCEntity.FIRST_NAME), data.getLast_name());
+					continue;
 				}
 				if (columnName.equals(JDBCEntity.LAST_NAME)) {
-					if (StringUtils.isBlank(data.getLast_name())) {
-						continue;
+					if (StringUtils.isNotBlank(data.getLast_name())) {
+						ps.setString(column_sortNoMap.get(JDBCEntity.LAST_NAME), data.getLast_name());
 					}
-					ps.setString(column_sortNoMap.get(JDBCEntity.LAST_NAME), data.getFirst_name());
+					continue;
 				}
 			}
 		} catch (NumberFormatException e) {
@@ -454,7 +596,7 @@ public class JDBCTempDao {
 	}
 
 	private Map<String, Integer> GetColumn_sortNoMap(Map<String, String> column_valueMap) {
-		Map<String, Integer> returnMap = new TreeMap<>();
+		Map<String, Integer> returnMap = new LinkedHashMap<>();
 		Integer index = 1;
 		for (var map : column_valueMap.entrySet()) {
 			returnMap.put(map.getKey(), index);
@@ -467,9 +609,9 @@ public class JDBCTempDao {
 	 * @return
 	 */
 	private Map<String, Integer> GetColumn_sortNoMap_forBatchUpdate() {
-		Map<String, Integer> returnMap = new TreeMap<>();
+		Map<String, Integer> returnMap = new LinkedHashMap<>();
 		Integer index = 1;
-		for (String columnName : GetSetQueryList_forBatchUpdate()) {
+		for (String columnName : JDBCEntity.GetSetQueryList_forBatchUpdate()) {
 			returnMap.put(columnName, index);
 			index++;
 		}

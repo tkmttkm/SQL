@@ -1,7 +1,9 @@
 package com.example.demo.Entity;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +32,7 @@ public class JDBCEntity {
 	 * @return
 	 */
 	public Map<String, String> getCoumn_ValueMap() {
-		Map<String, String> map = new TreeMap<String, String>();
+		Map<String, String> map = new LinkedHashMap<String, String>();
 
 		map.put(ID, Integer.valueOf(id).toString());
 		map.put(FIRST_NAME, first_name);
@@ -38,5 +40,19 @@ public class JDBCEntity {
 		map.put(BIRTHDAY, Integer.valueOf(birth_day).toString());
 
 		return map;
+	}
+	
+	/**
+	 * @return
+	 */
+	public static List<String> GetSetQueryList_forBatchUpdate() {
+		List<String> setQueryList = new ArrayList<String>();
+
+		setQueryList.add(JDBCEntity.ID);
+		setQueryList.add(JDBCEntity.FIRST_NAME);
+		setQueryList.add(JDBCEntity.LAST_NAME);
+		setQueryList.add(JDBCEntity.BIRTHDAY);
+
+		return setQueryList;
 	}
 }
