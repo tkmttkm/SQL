@@ -116,8 +116,12 @@ class JDBCTempDaoTest {
 		assertEquals(insertCount, 2);
 		var insertData1 = dao.findById(10);
 		var insertData2 = dao.findById(20);
+		assertEquals(insertData1.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(insertData1.get(JDBCEntity.LAST_NAME.toString().strip()), "たのすいーーーー");
+		assertEquals(Integer.parseInt(insertData1.get(JDBCEntity.BIRTHDAY).toString()), 20240202);
+		assertEquals(insertData2.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(insertData2.get(JDBCEntity.LAST_NAME.toString().strip()), "楽しいねえ");
+		assertEquals(Integer.parseInt(insertData2.get(JDBCEntity.BIRTHDAY).toString()), 20240203);
 	}
 
 	@Test
@@ -169,25 +173,25 @@ class JDBCTempDaoTest {
 			dao.getAllJDBCEntity();
 		});
 		
-		Map<String, String> columnInfo = new HashMap<>();
-		columnInfo.put("id", "INT NOT NULL AUTO_INCREMENT");
-		columnInfo.put("first_name", "VARCHAR(10) NOT NULL");
-		columnInfo.put("last_name", "VARCHAR(10) NOT NULL");
-		columnInfo.put("birth_day", "INT NULL");
-
-		List<String> primaryList = new ArrayList<>();
-		primaryList.add("id");
-
-		//消したテーブルを元に戻す
-		dao.executeCreate("test_table", columnInfo, primaryList);
-		List<JDBCEntity> entityList = new ArrayList<>();
-		entityList.add(new JDBCEntity(1,"テスト", "太郎", 20240101));
-		entityList.add(new JDBCEntity(2,"テスト", "二郎", 20240101));
-		entityList.add(new JDBCEntity(3,"テスト", "三郎", 20240101));
-		entityList.add(new JDBCEntity(4,"テスト", "花子", 20250101));
-
-		int insertCount = dao.batchInsert(entityList);
-		
+//		Map<String, String> columnInfo = new HashMap<>();
+//		columnInfo.put("id", "INT NOT NULL AUTO_INCREMENT");
+//		columnInfo.put("first_name", "VARCHAR(10) NOT NULL");
+//		columnInfo.put("last_name", "VARCHAR(10) NOT NULL");
+//		columnInfo.put("birth_day", "INT NULL");
+//
+//		List<String> primaryList = new ArrayList<>();
+//		primaryList.add("id");
+//
+//		//消したテーブルを元に戻す
+//		dao.executeCreate("test_table", columnInfo, primaryList);
+//		List<JDBCEntity> entityList = new ArrayList<>();
+//		entityList.add(new JDBCEntity(1,"テスト", "太郎", 20240101));
+//		entityList.add(new JDBCEntity(2,"テスト", "二郎", 20240101));
+//		entityList.add(new JDBCEntity(3,"テスト", "三郎", 20240101));
+//		entityList.add(new JDBCEntity(4,"テスト", "花子", 20250101));
+//
+//		int insertCount = dao.batchInsert(entityList);
+//		assertEquals(insertCount, 4);
 	}
 
 	@Test
@@ -203,6 +207,6 @@ class JDBCTempDaoTest {
 		primaryList.add("name");
 
 		dao.executeCreate("createTable", columnInfo, primaryList);
-
+		
 	}
 }
