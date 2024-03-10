@@ -326,6 +326,7 @@ public class JDBCTempDao {
 	}
 
 	/**
+	 * SQLインジェクション対策ができないため危険
 	 * @param tableName
 	 * @param column_columnInfo カラム名とその型やNULL許容などのマップ
 	 * @param primaryKeyList プライマリキーのから無名を詰めたリスト
@@ -361,6 +362,7 @@ public class JDBCTempDao {
 	}
 	
 	/**
+	 * SQLインジェクション対策ができないため危険
 	 * @param tableName
 	 * @throws DataAccessException
 	 */

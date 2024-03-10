@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Disabled;
@@ -19,25 +18,25 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.Dao.JDBCTempDao;
+import com.example.demo.Dao.NamedJDBCDao;
 import com.example.demo.Entity.JDBCEntity;
 
 @SpringBootTest
 @Transactional
-class JDBCTempDaoTest {
+class NamedJDBCDaoTest {
 
 	@Autowired
-	private JDBCTempDao dao;
+	private NamedJDBCDao dao;
 
 	@Test
 	void testFindAll() {
-		var dataList = dao.findAll();
-		assertTrue(dataList.size() == 4);
+		List<Map<String, Object>> allData = dao.findAll();
+		assertTrue(allData.size() == 4);
 	}
 
 	@Test
 	void testFindById() {
-		var data = dao.findById(1);
+		Map<String, Object> data = dao.findById(1);
 
 		assertEquals(data.get(JDBCEntity.BIRTHDAY), 20240101);
 		assertEquals(data.get(JDBCEntity.FIRST_NAME).toString().strip(), "テスト");
@@ -49,18 +48,18 @@ class JDBCTempDaoTest {
 		Map<String, Object> beforeData = dao.findById(1);
 		assertEquals(beforeData.get(JDBCEntity.FIRST_NAME).toString().strip(), "テスト");
 		assertEquals(beforeData.get(JDBCEntity.LAST_NAME).toString().strip(), "太郎");
-
-		Map<String, String> updateMap = new TreeMap<>();
+		
+		Map<String, String> updateMap = new HashMap<>();
 		updateMap.put(JDBCEntity.FIRST_NAME, "更新した");
 		updateMap.put(JDBCEntity.LAST_NAME, "太郎くん");
 		int updateCount = dao.updateById(1, updateMap);
 		assertTrue(updateCount == 1);
-
+		
 		Map<String, Object> updateData = dao.findById(1);
 		assertEquals(updateData.get(JDBCEntity.FIRST_NAME).toString().strip(), "更新した");
 		assertEquals(updateData.get(JDBCEntity.LAST_NAME).toString().strip(), "太郎くん");
 	}
-
+	
 	@Test
 	void testInsert() {
 		Map<String, String> insertData = new LinkedHashMap<>();
@@ -68,46 +67,46 @@ class JDBCTempDaoTest {
 		insertData.put(JDBCEntity.FIRST_NAME, "インサート");
 		insertData.put(JDBCEntity.LAST_NAME, "太郎");
 		insertData.put(JDBCEntity.BIRTHDAY, "20200202");
-
+		
 		dao.insert(insertData);
-
+		
 		var data = dao.findById(10);
 		assertEquals(data.get(JDBCEntity.FIRST_NAME), "インサート");
 		assertEquals(data.get(JDBCEntity.LAST_NAME), "太郎");
 		assertEquals(data.get(JDBCEntity.BIRTHDAY), 20200202);
 	}
-
+	
 	@Test
-	void testDeleteById() {
+	void testDelete() {
 		Map<String, Object> beforeData = dao.findById(1);
 		assertEquals(beforeData.get(JDBCEntity.FIRST_NAME).toString().strip(), "テスト");
 		assertEquals(beforeData.get(JDBCEntity.LAST_NAME).toString().strip(), "太郎");
-
+		
 		int deleteCount = dao.deleteById(1);
 		assertTrue(deleteCount == 1);
-
+		
 		List<Map<String, Object>> deleteData = dao.findAll();
 		assertFalse(deleteData.contains(beforeData));
 	}
-
+	
 	@Test
 	void testBatchUpdate() {
 		List<JDBCEntity> entityList = new ArrayList<>();
 		entityList.add(new JDBCEntity(1, "Junit", "たのすいーーーー", 20240202));
 		entityList.add(new JDBCEntity(2, "Junit", "楽しいねえ", 20240203));
-
+		
 		int updateCount = dao.batchUpdate(entityList);
 		assertEquals(updateCount, 2);
 		var afterId1 = dao.findById(1);
 		var afterId2 = dao.findById(2);
-		assertEquals(afterId1.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
-		assertEquals(afterId1.get(JDBCEntity.LAST_NAME.toString().strip()), "たのすいーーーー");
-		assertEquals(Integer.parseInt(afterId1.get(JDBCEntity.BIRTHDAY).toString()), 20240202);
-		assertEquals(afterId2.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
-		assertEquals(afterId2.get(JDBCEntity.LAST_NAME.toString().strip()), "楽しいねえ");
-		assertEquals(Integer.parseInt(afterId2.get(JDBCEntity.BIRTHDAY).toString()), 20240203);
+		assertEquals(afterId1.get(JDBCEntity.FIRST_NAME.toString().strip()),"Junit");
+		assertEquals(afterId1.get(JDBCEntity.LAST_NAME.toString().strip()),"たのすいーーーー");
+		assertEquals(Integer.parseInt(afterId1.get(JDBCEntity.BIRTHDAY).toString()),20240202);
+		assertEquals(afterId2.get(JDBCEntity.FIRST_NAME.toString().strip()),"Junit");
+		assertEquals(afterId2.get(JDBCEntity.LAST_NAME.toString().strip()),"楽しいねえ");
+		assertEquals(Integer.parseInt(afterId2.get(JDBCEntity.BIRTHDAY).toString()),20240203);
 	}
-
+	
 	@Test
 	void testBatchInsert() {
 		List<JDBCEntity> entityList = new ArrayList<>();
@@ -125,13 +124,13 @@ class JDBCTempDaoTest {
 		assertEquals(insertData2.get(JDBCEntity.LAST_NAME.toString().strip()), "楽しいねえ");
 		assertEquals(Integer.parseInt(insertData2.get(JDBCEntity.BIRTHDAY).toString()), 20240203);
 	}
-
+	
 	@Test
 	void testBatchDelete() {
 		List<JDBCEntity> entityList = new ArrayList<>();
 		entityList.add(new JDBCEntity(1, null, null, 0));
 		entityList.add(new JDBCEntity(2, null, null, 0));
-
+		
 		int deleteCount = dao.batchDelete(entityList);
 		assertEquals(deleteCount, 2);
 		var afterId1 = dao.findById(1);
@@ -139,7 +138,7 @@ class JDBCTempDaoTest {
 		assertTrue(afterId1.size() == 0);
 		assertTrue(afterId2.size() == 0);
 	}
-
+	
 	@Test
 	void testGetAllJDBCEEntity() {
 		List<JDBCEntity> dataList = dao.getAllJDBCEntity();
@@ -166,7 +165,7 @@ class JDBCTempDaoTest {
 		assertEquals(data.getFirst_name(), "テスト");
 		assertEquals(data.getLast_name(), "二郎");
 	}
-
+	
 	@Test
 	@Disabled
 	void testDrop() {
@@ -174,26 +173,26 @@ class JDBCTempDaoTest {
 		assertThrows(DataAccessException.class, () -> {
 			dao.getAllJDBCEntity();
 		});
-
-		//		Map<String, String> columnInfo = new HashMap<>();
-		//		columnInfo.put("id", "INT NOT NULL AUTO_INCREMENT");
-		//		columnInfo.put("first_name", "VARCHAR(10) NOT NULL");
-		//		columnInfo.put("last_name", "VARCHAR(10) NOT NULL");
-		//		columnInfo.put("birth_day", "INT NULL");
-		//
-		//		List<String> primaryList = new ArrayList<>();
-		//		primaryList.add("id");
-		//
-		//		//消したテーブルを元に戻す
-		//		dao.executeCreate("test_table", columnInfo, primaryList);
-		//		List<JDBCEntity> entityList = new ArrayList<>();
-		//		entityList.add(new JDBCEntity(1,"テスト", "太郎", 20240101));
-		//		entityList.add(new JDBCEntity(2,"テスト", "二郎", 20240101));
-		//		entityList.add(new JDBCEntity(3,"テスト", "三郎", 20240101));
-		//		entityList.add(new JDBCEntity(4,"テスト", "花子", 20250101));
-		//
-		//		int insertCount = dao.batchInsert(entityList);
-		//		assertEquals(insertCount, 4);
+		
+//		Map<String, String> columnInfo = new HashMap<>();
+//		columnInfo.put("id", "INT NOT NULL AUTO_INCREMENT");
+//		columnInfo.put("first_name", "VARCHAR(10) NOT NULL");
+//		columnInfo.put("last_name", "VARCHAR(10) NOT NULL");
+//		columnInfo.put("birth_day", "INT NULL");
+//
+//		List<String> primaryList = new ArrayList<>();
+//		primaryList.add("id");
+//
+//		//消したテーブルを元に戻す
+//		dao.executeCreate("test_table", columnInfo, primaryList);
+//		List<JDBCEntity> entityList = new ArrayList<>();
+//		entityList.add(new JDBCEntity(1,"テスト", "太郎", 20240101));
+//		entityList.add(new JDBCEntity(2,"テスト", "二郎", 20240101));
+//		entityList.add(new JDBCEntity(3,"テスト", "三郎", 20240101));
+//		entityList.add(new JDBCEntity(4,"テスト", "花子", 20250101));
+//
+//		int insertCount = dao.batchInsert(entityList);
+//		assertEquals(insertCount, 4);
 	}
 
 	@Test
@@ -210,19 +209,19 @@ class JDBCTempDaoTest {
 
 		dao.executeCreate("CREATE_TABLE", columnInfo, primaryList);
 
-		List<String> tableNameList = new createTable().GetTableNams();
+		List<String> tableNameList = new createTableTest().GetTableNams();
 		assertTrue(tableNameList.contains("CREATE_TABLE"));
 	}
 }
 
-class createTable {
+class createTableTest {
 
 	private final JdbcTemplate jdbc;
 
 	/**
 	 * h2データベースの設定
 	 */
-	public createTable() {
+	public createTableTest() {
 		jdbc = new JdbcTemplate();
 		jdbc.setDataSource(DataSourceBuilder.create()
 				.driverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy")
