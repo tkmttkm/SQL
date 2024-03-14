@@ -9,10 +9,19 @@ import com.example.demo.Entity.JDBCEntity;
 
 /**
  * @author Takumi
- * Entityとテーウルをマッピングする
+ * <pre>
+ * {@link JDBCEntity}のフィールドとマッピングをするためのクラス
+ * {@link #mapRow(ResultSet, int)}で対応するカラムと値を設定する（{@code override}使用
+ * </pre>
  */
 public class JDBCEntityRowMapper implements RowMapper<JDBCEntity> {
 
+	/**
+	 * <pre>
+	 *　引数にテーブルのカラム名を渡し、型を合わせることで
+	 *　マッピングされる
+	 * </pre>
+	 */
 	@Override
 	public JDBCEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 		return new JDBCEntity(
