@@ -23,7 +23,10 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * @author Takumi
+ * <pre>
  * JdbcTemplateを使用するクラス
+ * パラメータは、?と何番目の?に何を入れるかで指定できる
+ * </pre>
  */
 @Repository
 @RequiredArgsConstructor
