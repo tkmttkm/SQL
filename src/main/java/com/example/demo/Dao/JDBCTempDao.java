@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * @author Takumi
  * <pre>
- * JdbcTemplateを使用するクラス
+ * {@link JdbcTemplate}を使用するクラス
  * パラメータは、?と何番目の?に何を入れるかで指定できる
  * </pre>
  */
@@ -37,6 +37,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * {@link JDBCEntity#TEST TEST}テーブルのデータを全てを
+	 * {@link JdbcTemplate#queryForList(String)}を使用して
 	 * keyカラム名、valueその値（型Object）で取得
 	 * </pre>
 	 * @return key:カラム名 value:取得データ の{@code Map<String, Object>}をつめた{@code List} 
@@ -64,6 +65,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * プライマリキーをWHERE句に入れることでデータを1つ取得
+	 * {@link JdbcTemplate#queryForMap(String)}を使用
 	 * </pre>
 	 * @param id 取得したいデータのid（プライマリキー）を渡す
 	 * @return
@@ -93,6 +95,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * 更新したいデータのidをWHERE句に渡すことで、1つのデータを更新する
+	 * {@link JdbcTemplate#update(String, PreparedStatementSetter)}使用
 	 * </pre>
 	 * @param id 更新したいデータのid（プライマリキー）
 	 * @param updateDataMap 更新したいデータ（key:カラム名 value:更新したい値)
@@ -129,6 +132,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * データのインサートに使用
+	 * {@link JdbcTemplate#update(String, PreparedStatementSetter)}使用
 	 * </pre>
 	 * @param insertDataMap key:カラム名 value:インサートしたい値
 	 * @return インサートされた数（基本１）
@@ -157,6 +161,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * 削除したいデータのid（プライマリキー）を引数に渡すことでデータを削除する
+	 * {@link JdbcTemplate#update(String, Object...)}使用
 	 * </pre>
 	 * @param id s削除したいデータのid
 	 * @return 削除したデータの数（基本１）
@@ -186,6 +191,7 @@ public class JDBCTempDao {
 	 * データの一括アップデートをする
 	 * {@link JDCEntity}クラスにプライマリキーと更新したい値を正しくセットし、それを{@code List}煮詰めえることで
 	 * そのデータが更新される
+	 * {@link JdbcTemplate#batchUpdate(String, BatchPreparedStatementSetter)}使用
 	 * </pre>
 	 * @param updateList 更新したいデータのリスト
 	 * @return 更新した数
@@ -231,6 +237,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * データの一括インサート
+	 * {@link JdbcTemplate#batchUpdate(String, BatchPreparedStatementSetter)}使用
 	 * </pre>
 	 * @param insertList インサートしたいデータのリスト
 	 * @return インサート件数
@@ -264,6 +271,7 @@ public class JDBCTempDao {
 	/**
 	 * <pre>
 	 * データの一括削除
+	 * {@link JdbcTemplate#batchUpdate(String, BatchPreparedStatementSetter)}使用
 	 * </pre>
 	 * @param deleteList
 	 * @return
@@ -307,6 +315,7 @@ public class JDBCTempDao {
 	 * <pre>
 	 * テーブルのすべてのデータを取得する
 	 * かつ、取得データを{@link JDBCEntity}の対応するフィールドにセットする
+	 * {@link JdbcTemplate#query(String, org.springframework.jdbc.core.RowMapper)}使用
 	 * </pre>
 	 * @return 取得データを{@link JDBCEntity}のフィールドにセットしたリスト
 	 * @throws DataAccessException
@@ -335,6 +344,7 @@ public class JDBCTempDao {
 	 * <pre>
 	 * 取得したいデータのid（プライマリキー）を引数に渡すことで、データを１件取得する
 	 * かつ取得データを{@link JABCEntity}の対応するフィールドにセットする
+	 * {@link JdbcTemplate#query(String, org.springframework.jdbc.core.RowMapper, Object...)}使用
 	 * </pre>
 	 * @param id 取得したいデータのid（プライマリキー）
 	 * @return 取得したデータを{@link JDBCEntity}の対応するフィールドにセットしたリスト
@@ -366,6 +376,7 @@ public class JDBCTempDao {
 	 * テーブルの作成で使用
 	 * {@link JdbcTemplate#execute(String)}の使用例紹介のために作成したメソッド
 	 * ※SQLインジェクション対策ができないため、あまりお勧めできない
+	 * {@link JdbcTemplate#execute(String)}使用
 	 * </pre>
 	 * @param tableName 作成したいテーブルの名前
 	 * @param column_columnInfo key:カラム名 value:型やNULL許容など(例 INT NOT NULL)
@@ -406,6 +417,7 @@ public class JDBCTempDao {
 	 * テーブルの削除で使用
 	 * {@link JdbcTemplate#execute(String)}の使用例紹介のために作成したメソッド
 	 * ※SQLインジェクション対策ができないため、あまりお勧めできない
+	 * {@link JdbcTemplate#execute(String)}使用
 	 * </pre>
 	 * @param tableName 削除したいテーブルの名前
 	 * @throws DataAccessException
