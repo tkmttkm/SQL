@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.Entity.JDBCEntity;
 
+/**
+ * @author Takumi
+ */
 @SpringBootTest
 @Transactional
 class JDBCTempDaoTest {
@@ -149,15 +152,15 @@ class JDBCTempDaoTest {
 
 		//データの一括更新
 		int updateCount = dao.batchUpdate(entityList);
-		
+
 		//データの更新確認
 		assertEquals(updateCount, 2);
-		
+
 		Map<String, Object> afterId1 = dao.findById(1);
 		assertEquals(afterId1.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(afterId1.get(JDBCEntity.LAST_NAME.toString().strip()), "たのすいーーーー");
 		assertEquals(Integer.parseInt(afterId1.get(JDBCEntity.BIRTHDAY).toString()), 20240202);
-		
+
 		Map<String, Object> afterId2 = dao.findById(2);
 		assertEquals(afterId2.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(afterId2.get(JDBCEntity.LAST_NAME.toString().strip()), "楽しいねえ");
@@ -180,15 +183,15 @@ class JDBCTempDaoTest {
 		entityList.add(new JDBCEntity(20, "Junit", "楽しいねえ", 20240203));
 		//データの一括挿入
 		int insertCount = dao.batchInsert(entityList);
-		
+
 		//データの挿入確認
 		assertEquals(insertCount, 2);
-		
+
 		var insertData1 = dao.findById(10);
 		assertEquals(insertData1.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(insertData1.get(JDBCEntity.LAST_NAME.toString().strip()), "たのすいーーーー");
 		assertEquals(Integer.parseInt(insertData1.get(JDBCEntity.BIRTHDAY).toString()), 20240202);
-		
+
 		var insertData2 = dao.findById(20);
 		assertEquals(insertData2.get(JDBCEntity.FIRST_NAME.toString().strip()), "Junit");
 		assertEquals(insertData2.get(JDBCEntity.LAST_NAME.toString().strip()), "楽しいねえ");
@@ -210,13 +213,13 @@ class JDBCTempDaoTest {
 		entityList.add(new JDBCEntity(2, null, null, 0));
 		//データの一括削除
 		int deleteCount = dao.batchDelete(entityList);
-		
+
 		//データの削除確認
 		assertEquals(deleteCount, 2);
-		
+
 		Map<String, Object> afterId1 = dao.findById(1);
 		assertTrue(afterId1.size() == 0);
-		
+
 		Map<String, Object> afterId2 = dao.findById(2);
 		assertTrue(afterId2.size() == 0);
 	}
@@ -231,7 +234,7 @@ class JDBCTempDaoTest {
 	void testGetAllJDBCEEntity() {
 		//データの取得
 		List<JDBCEntity> dataList = dao.getAllJDBCEntity();
-		
+
 		//取得データの確認
 		assertTrue(dataList.size() == 4);
 
@@ -280,7 +283,7 @@ class JDBCTempDaoTest {
 	void testDrop() {
 		//テーブルの削除
 		dao.executeDrop(JDBCEntity.TEST);
-		
+
 		//削除したテーブルを取得しようとすることで、テーブルの削除確認
 		assertThrows(DataAccessException.class, () -> {
 			dao.getAllJDBCEntity();
@@ -320,7 +323,6 @@ class JDBCTempDaoTest {
 /**
  * @author Takumi
  * {@link JDBCTempDaoTest#testExecuteCreate()}のテーブル作成確認用クラス
- *
  */
 class createTable {
 

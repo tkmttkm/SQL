@@ -20,8 +20,13 @@ import com.example.demo.Entity.JDBCEntity;
 
 /**
  * @author Takumi
- * NamedJdbcTemplate
- *
+ * <pre>
+ * {@link NamedParameterJdbcTemplate}を使用して
+ * DB接続するクラス
+ * :パラメータ名 を設定し、
+ * {@link MapSqlParameterSource}などを使用することで、
+ * パラメータをマッピング
+ *</pre>
  */
 @Repository
 public class NamedJDBCDao {
@@ -30,7 +35,12 @@ public class NamedJDBCDao {
 	private NamedParameterJdbcTemplate namedJdbc;
 
 	/**
-	 * @return {@link JDBCEntity#TEST TEST}テーブルのデータを全て取得
+	 * <pre>
+	 * テーブルのデータを{@code List<Map<String, Object>>}ですべて取得。
+	 * {@code Map<String, Object>}のkeyはカラム名、valueは取得データ
+	 * {@link NamedParameterJdbcTemplate#queryForList(String, SqlParameterSource)}使用
+	 * </pre>
+	 * @return {@link JDBCEntity#TEST TEST}テーブルのデータを{@code List<Map<String, Object>>}で取得
 	 * @throws DataAccessException
 	 */
 	public List<Map<String, Object>> findAll() throws DataAccessException {
@@ -55,8 +65,14 @@ public class NamedJDBCDao {
 	}
 
 	/**
-	 * @param id
-	 * @return
+	 * <pre>
+	 * 取得したいデータを
+	 * 引数にid（プライマリキー）を渡すことで、取得
+	 * 型は{@code Map<String, Object>}でkeyはカラム名、valueは取得データ
+	 * {@link NamedParameterJdbcTemplate#queryForMap(String, SqlParameterSource)}使用
+	 * </pre>
+	 * @param id 取得したいデータおid（プライマリキー）
+	 * @return idを渡したデータの{@code Map<String, Object>}
 	 * @throws DataAccessException
 	 */
 	public Map<String, Object> findById(int id) throws DataAccessException {
@@ -84,10 +100,15 @@ public class NamedJDBCDao {
 	}
 
 	/**
-	 * 指定したIDを更新する
+	 * <pre>
+	 * 指定したid（プライマリキー）のデータを更新する
+	 * 引数にid（プライマリキー）とkeyにカラム名、valueに更新したい値を入れた{@code Map<String, String}を渡すことで
+	 * テーブルを更新する
+	 * {@link NamedParameterJdbcTemplate#update(String, SqlParameterSource)}使用
+	 * </pre>
 	 * @param id
 	 * @param updateDataMap
-	 * @return
+	 * @return　更新数
 	 * @throws DataAccessException
 	 */
 	public int updateById(int id, Map<String, String> updateDataMap) throws DataAccessException {
@@ -114,8 +135,14 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @param insertDataMap
-	 * @return
+	 * <pre>
+	 * データを挿入する
+	 * 引数に{@code Map<STring, String>} key:カラム名 value:挿入したい値
+	 * を渡すことでデータを挿入する
+	 * {@link NamedParameterJdbcTemplate#update(String, SqlParameterSource)}使用
+	 * </pre>
+	 * @param insertDataMap key:カラム名 value:挿入したい値
+	 * @return 挿入数
 	 * @throws DataAccessException
 	 */
 	public int insert(Map<String, String> insertDataMap) throws DataAccessException {
@@ -137,8 +164,12 @@ public class NamedJDBCDao {
 	}
 
 	/**
-	 * @param id
-	 * @return
+	 * <pre>
+	 * 引数に削除したいデータのid（プライマリキー）を渡すことでデータを削除する
+	 * {@link NamedParameterJdbcTemplate#update(String, SqlParameterSource)}使用
+	 * </pre>
+	 * @param id 削除したいデータのid
+	 * @return 削除数
 	 * @throws DataAccessException
 	 */
 	public int deleteById(int id) throws DataAccessException {
@@ -163,8 +194,14 @@ public class NamedJDBCDao {
 	}
 
 	/**
-	 * @param updateList
-	 * @return
+	 * <pre>
+	 * データの一括更新
+	 * 引数に更新したいデータの{@code List<JDBCEntity>}を渡すことで
+	 * データを一括更新する
+	 * {@link NamedParameterJdbcTemplate#batchUpdate(String, SqlParameterSource[])}使用
+	 * </pre>
+	 * @param updateList 更新したいデータのリスト
+	 * @return 更新数
 	 * @throws DataAccessException
 	 */
 	public int batchUpdate(List<JDBCEntity> updateList) throws DataAccessException {
@@ -191,8 +228,13 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @param insertList
-	 * @return
+	 * <pre>
+	 * データの一括挿入
+	 * 引数に挿入したいデータの{@code List<JDBCEntity>}を渡すことで、データを一括挿入する
+	 * {@link NamedParameterJdbcTemplate#batchUpdate(String, SqlParameterSource[])}使用
+	 * </pre>
+	 * @param insertList 挿入したいデータのリスト
+	 * @return 挿入数
 	 * @throws DataAccessException
 	 */
 	public int batchInsert(List<JDBCEntity> insertList) throws DataAccessException {
@@ -221,8 +263,14 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @param deleteList
-	 * @return
+	 * <pre>
+	 * データの一括削除
+	 * 引数に削除したいデータの{@code List<JDBCEntity>}を渡すことでデータを一括削除する
+	 * この引数にセットする値はid（プライマリキー）のみでOK
+	 * {@link NamedParameterJdbcTemplate#batchUpdate(String, SqlParameterSource[])}使用
+	 * </pre>
+	 * @param deleteList 削除したいデータのリスト（セットする値はidにみでOK）
+	 * @return 削除数
 	 */
 	public int batchDelete(List<JDBCEntity> deleteList) {
 		SqlParameterSource[] params = SqlParameterSourceUtils.createBatch(deleteList);
@@ -246,10 +294,12 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @return
+	 * <pre>
+	 * テーブルないのデータを{@code List<JDBCEntity>}で取得。
+	 * {@link NamedParameterJdbcTemplate#query(String, org.springframework.jdbc.core.RowMapper)}使用
+	 * </pre>
+	 * @return テーブル内の全データ
 	 * @throws DataAccessException
-	 * すべてのデータを取得する
-	 * 
 	 */
 	public List<JDBCEntity> getAllJDBCEntity() throws DataAccessException {
 		try {
@@ -270,8 +320,13 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @param id
-	 * @return
+	 * <pre>
+	 * 引数に取得したいデータのid（プライマリキー）を渡すことで
+	 * データを{@code List<JDBCEntity>}で取得
+	 * {@link NamedParameterJdbcTemplate#query(String, org.springframework.jdbc.core.RowMapper)}使用
+	 * </pre>
+	 * @param id 取得したいデータのid
+	 * @return 渡したidのデータ
 	 * @throws DataAccessException
 	 */
 	public JDBCEntity getJDBCEntityById(int id) throws DataAccessException {
@@ -299,8 +354,12 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * SQLインジェクション対策ができないため危険
-	 * @param tableName
+	 * <pre>
+	 * {@link NamedParameterJdbcTemplate#getJdbcOperations()#executeDrop(String)}を使用してテーブルを作成する
+	 * 引数に作成したいテーブル名、作成したいテーブル名と型、NULL許容などの{@code Map<String, String>}、プライマリキーに設定したい{@code List<String>}を渡す
+	 * ※SQLインジェクション対策ができないため推奨はできない
+	 * </pre>
+	 * @param tableName テーブル名
 	 * @param column_columnInfo カラム名とその型やNULL許容などのマップ
 	 * @param primaryKeyList プライマリキーのから無名を詰めたリスト
 	 * @throws DataAccessException
@@ -335,8 +394,12 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * SQLインジェクション対策ができないため危険
-	 * @param tableName
+	 * <pre>
+	 * {@link NamedParameterJdbcTemplate#getJdbcOperations()#executeDrop(String)}を用いてテーブルを削除する
+	 * 引数に削除したいテーブルの名前を渡す
+	 * ※SQLインジェクション対策ができないため推奨できない
+	 * </pre>
+	 * @param tableName テーブル名
 	 * @throws DataAccessException
 	 */
 	public void executeDrop(String tableName) throws DataAccessException {
@@ -356,9 +419,11 @@ public class NamedJDBCDao {
 	}
 
 	/**
+	 * <pre>
 	 * カラム名とその値のMapをイコールでつなぐ
+	 * </pre>
 	 * @param map
-	 * @return
+	 * @return カラム名 = 値, カラム名 = 値, ....
 	 */
 	private List<String> joinEqual(Map<String, String> map) {
 		List<String> list = new ArrayList<String>();
@@ -371,18 +436,25 @@ public class NamedJDBCDao {
 	}
 
 	/**
+	 * <pre> 
 	 * リストにつめた文字列をカンマでつなぐ
+	 * </pre>
 	 * @param list
-	 * @return
+	 * @return 値, 値, 値, ...
 	 */
 	private String joinComma(List<String> list) {
 		return String.join(", ", list);
 	}
 
 	/**
+	 * <pre>
 	 * UPDATEのSET句を作成する
-	 * @param map
-	 * @return
+	 * {@code Map<String, Object>}key:カラム名 value:更新したい値
+	 * を key:カラム名 value: :カラム名
+	 * に変更する
+	 * </pre>
+	 * @param map key:カラム名 value:更新したい値
+	 * @return カラム名 = :カラム名, カラム名 = :カラム名, ....
 	 */
 	private String updateSet(Map<String, String> map, MapSqlParameterSource params) {
 		for (var entry : map.entrySet()) {
@@ -394,8 +466,11 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @param column_valueMap
-	 * @return
+	 * <pre>
+	 * インサート文の(...) VALUES (...)を作成する
+	 * </pre>
+	 * @param column_valueMap keu:カラム名 value:値
+	 * @return （カラム名, カラム名, ...) VALUES (:カラム名, :カラム名, :カラム名, ...)
 	 */
 	private String insertSet(Map<String, String> column_valueMap, MapSqlParameterSource params) {
 		String[] columnArray = new String[column_valueMap.size()];
@@ -420,7 +495,9 @@ public class NamedJDBCDao {
 	}
 
 	/**
-	 * パラメーターの被りが生じないために採番をつける
+	 * <pre>
+	 * パラメーターの被りが生じないために採番をつける 
+	 * </pre>
 	 * @param map
 	 * @param key
 	 * @return
@@ -438,9 +515,11 @@ public class NamedJDBCDao {
 	}
 
 	/**
+	 * <pre>
 	 * updateのset句を作成する
-	 * {@link JDBCEntity}用
-	 * @return
+	 * {@link JDBCEntity}のフィールドを使用
+	 * </pre>
+	 * @return id = :id, birth_day = :birth_day, first_name = :first_name, last_name = :last_name
 	 */
 	private String batchUpdateSet() {
 		List<String> batchUpdateSetList = new ArrayList<>();
@@ -454,7 +533,10 @@ public class NamedJDBCDao {
 	}
 	
 	/**
-	 * @return
+	 * <pre>
+	 * バッチインサート用の(...) VALUES (...)を作成
+	 * </pre>
+	 * @return (カラム名, カラム名, ... ) VALUES (:カラム名, :カラム名, ...)
 	 */
 	private String batchInsertSet() {
 		List<String> batchInsertColumnSetList = new ArrayList<>();
