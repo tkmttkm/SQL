@@ -305,7 +305,7 @@ class NamedJDBCDaoTest {
 
 /**
  * @author Takumi
- * {@link JDBCTempDaoTest#testExecuteCreate()}のテーブル作成確認用クラス
+ * {@link NamedJDBCDaoTest#testExecuteCreate()}のテーブル作成確認用クラス
  */
 class createTableTest {
 
